@@ -6,14 +6,22 @@ using System.Threading.Tasks;
 
 namespace Assignment.Models
 {
-   public class User
+   public class Users
     {
-        public int Id { get; set; }
-        public string First_Name { get; set; } = string.Empty;
-        public string Last_Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public int ProfileId { get; set; }
-        public Profile Profile { get; set; }
-        public List<Transaction> Transactions { get; set; }
+        public int UserId { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+
+        public Users(int userId, string userName, string email)
+        {
+            UserId = userId;
+            UserName = userName;
+            Email = email;
+        }
+
+        public Users()
+        {
+            // Default constructor
+        }
     }
 }

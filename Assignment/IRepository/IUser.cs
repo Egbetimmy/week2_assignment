@@ -10,8 +10,10 @@ namespace Assignment.IRepository
     // Interface for User
     public interface IUser
     {
-        void AddUser(User user);
-        void EditUser(int userId, User updatedUser);
-        User ViewUser(int userId);
+        string AddUser(Users userList);
+        List<Users> GetAllUser();
+        void EditUser(int userId);
+        void DeleteUser(int userId);
+        void ViewUser(int userId);
     }
 }
