@@ -8,9 +8,9 @@ namespace Assignment.Models
 {
     public class Transaction
     {
-        public int PaymentId { get; set; }
+        public int TransactionId { get; set; }
         public int UserID { get; set; }
-        public double Payment_amount { get; set; }
+        public double Transaction_amount { get; set; }
         public User UserLists { get; set; }
     }
 }
