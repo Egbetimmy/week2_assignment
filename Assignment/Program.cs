@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assignment.IRepository;
+using Assignment.Models;
 using Assignment.Repository;
 
-namespace Wema.BIT.User
+namespace Assignment.User
 {
     public class Program
     {
-        private static IUser UserRepository = new UserRepository();
-        private static List<User> users = new List<User>();
+        private static IUser userRepository = new UserRepository();
+        private static ITransaction transactionRepository = new TransactionRepository();
+        private static IProfile profileRepository = new ProfileRepository();
+        private static List<Users> users = new List<Users>();
+        private static bool exit;
 
         static void Main(string[] args)
         {
             GatherUserDetails();
-            ProcessUserOperations();
+            NestedUserOperations();
         }
 
         private static void GatherUserDetails()
@@ -40,106 +44,259 @@ namespace Wema.BIT.User
                 Console.Write("Email: ");
                 string email = Console.ReadLine();
 
-                User newUser = new UserList(userId, userName, email);
+                // Create a new User object using the constructor assuming it exists in the User class
+                Users newUser = new Users { UserId = userId, UserName = userName, Email = email };
                 users.Add(newUser);
+
+                // Add the newly created user to the UserRepository
+                userRepository.AddUser(newUser);
             }
         }
 
-        private static void ProcessUserOperations()
+        private static void NestedUserOperations()
         {
-            while (true)
+            while (!exit)
             {
-                DisplayUserOptions();
-                string userInput = Console.ReadLine();
+                Console.WriteLine("Options:");
+                Console.WriteLine("Enter 1 for User Operations");
+                Console.WriteLine("Enter 2 for Profile Operations");
+                Console.WriteLine("Enter 3 for Transaction Operations");
+                Console.WriteLine("Enter 4 to exit");
 
-                if (userInput.ToLower() == "exit")
-                {
-                    Console.WriteLine("Exiting...");
-                    break; // Exit the loop when 'exit' is entered
-                }
+                Console.Write("Enter your choice: ");
+                string userInput = Console.ReadLine();
 
                 switch (userInput)
                 {
                     case "1":
-                        ViewUser();
+                        UserOperations();
                         break;
+
                     case "2":
-                        DeleteUser();
+                        ProfileOperations();
                         break;
+
                     case "3":
-                        EditUser();
+                        TransactionOperations();
                         break;
+
+                    case "4":
+                        exit = true;
+                        Console.WriteLine("Exiting...");
+                        break;
+
                     default:
-                        Console.WriteLine("Invalid input. Please enter a valid option or 'exit'.");
+                        Console.WriteLine("Invalid input. Please enter a valid option.");
                         break;
                 }
             }
         }
 
-        private static void DisplayUserOptions()
+        private static void UserOperations()
         {
-            Console.WriteLine("Options:");
-            Console.WriteLine("Enter 1 to view user by ID");
-            Console.WriteLine("Enter 2 to delete user by ID");
-            Console.WriteLine("Enter 3 to edit user by ID");
-            Console.WriteLine("Enter 'exit' to exit");
-            Console.Write("Enter your choice: ");
+            bool exitUser = false;
+
+            while (!exitUser)
+            {
+                Console.WriteLine("User Operations:");
+                Console.WriteLine("Enter 1 to add user");
+                Console.WriteLine("Enter 2 to view user");
+                Console.WriteLine("Enter 3 to edit user");
+                Console.WriteLine("Enter 4 to delete user");
+                Console.WriteLine("Enter 5 to return to main menu");
+
+                Console.Write("Enter your choice: ");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
+                {
+                    case "1":
+                        Console.Write("Enter User ID to view: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToView))
+                        {
+                            userRepository.ViewUser(idToView);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+                    case "2":
+                        Console.Write("Enter User ID to delete: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToDelete))
+                        {
+                            userRepository.DeleteUser(idToDelete);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+                    case "3":
+                        Console.Write("Enter User ID to edit: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToEdit))
+                        {
+                            userRepository.EditUser(idToEdit);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+                    case "5":
+                        exitUser = true;
+                        Console.WriteLine("Returning to main menu...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid input. Please enter a valid option.");
+                        break;
+                }
+            }
         }
 
-        private static void ViewUser()
+        private static void ProfileOperations()
         {
-            Console.Write("Enter User ID to view: ");
-            if (int.TryParse(Console.ReadLine(), out int idToView))
+            bool exitUser = false;
+
+            while (!exitUser)
             {
-                User viewedUser = UserRepository.ViewUser(idToView);
-                if (viewedUser != null)
+                Console.WriteLine("User Operations:");
+                Console.WriteLine("Enter 1 to Update user");
+                Console.WriteLine("Enter 2 to delete user");
+                Console.WriteLine("Enter 3 to return to main menu");
+
+                Console.Write("Enter your choice: ");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
                 {
-                    Console.WriteLine($"User Found - ID: {viewedUser.Id}, Name: {viewedUser.UserName}, Email: {viewedUser.Email}");
+                    case "1":
+                        Console.Write("Enter User ID to update profile: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToView))
+                        {
+                            // Gather updated profile details from user input
+                            Console.Write("Enter updated Address: ");
+                            string updatedAddress = Console.ReadLine();
+
+                            Console.Write("Enter updated Phone: ");
+                            string updatedPhone = Console.ReadLine();
+
+                            Console.Write("Enter updated Photo: ");
+                            string updatedPhoto = Console.ReadLine();
+
+                            Console.Write("Enter updated Local Government: ");
+                            string updatedLocalGovt = Console.ReadLine();
+
+                            // Create an instance of the updated profile
+                            Profile updatedProfile = new Profile
+                            {
+                                UserId = idToView,
+                                Address = updatedAddress,
+                                Phone = updatedPhone,
+                                Photo = updatedPhoto,
+                                LocalGovt = updatedLocalGovt
+                            };
+
+                            // Update the profile using the repository method
+                            profileRepository.UpdateProfile(idToView, updatedProfile);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+
+                    case "2":
+                        Console.Write("Enter User ID to delete: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToDelete))
+                        {
+                            profileRepository.DeleteProfile(idToDelete);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+                    case "3":
+                        exitUser = true;
+                        Console.WriteLine("Returning to main menu...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid input. Please enter a valid option.");
+                        break;
                 }
-                else
-                {
-                    Console.WriteLine("User not found.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid User ID.");
             }
         }
 
-        private static void DeleteUser()
+        private static void TransactionOperations()
         {
-            Console.Write("Enter User ID to delete: ");
-            if (int.TryParse(Console.ReadLine(), out int idToDelete))
+            bool exitUser = false;
+
+            while (!exitUser)
             {
-                bool isDeleted = UserRepository.DeleteUser(idToDelete);
-                if (isDeleted)
+                Console.WriteLine("User Operations:");
+                Console.WriteLine("Enter 1 to add Transaction");
+                Console.WriteLine("Enter 2 to view Transaction");
+                Console.WriteLine("Enter 3 to return to main menu");
+
+                Console.Write("Enter your choice: ");
+                string userInput = Console.ReadLine();
+
+                switch (userInput)
                 {
-                    Console.WriteLine("User deleted successfully.");
+                    case "1":
+                        Console.Write("Enter User ID to add payment: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToAdd))
+                        {
+                            Console.Write("Enter payment amount: ");
+                            if (double.TryParse(Console.ReadLine(), out double paymentAmount))
+                            {
+                                // Create a new transaction instance with necessary data
+                                Transaction newPayment = new Transaction { UserID = idToAdd, Transaction_amount = paymentAmount };
+                                transactionRepository.AddPayment(idToAdd, newPayment);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid payment amount.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+                    case "2":
+                        Console.Write("Enter User ID to view transactions: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToView))
+                        {
+                            transactionRepository.ViewTransaction(idToView);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+
+                    case "3":
+                        exitUser = true;
+                        Console.WriteLine("Returning to main menu...");
+                        break;
+
+                    default:
+                        Console.WriteLine("Invalid input. Please enter a valid option.");
+                        break;
                 }
-                else
-                {
-                    Console.WriteLine("User not found or deletion failed.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("Invalid User ID.");
             }
         }
 
-        private static void EditUser()
-        {
-            Console.Write("Enter User ID to edit: ");
-            if (int.TryParse(Console.ReadLine(), out int idToEdit))
-            {
-                UserRepository.EditUser(idToEdit);
-                Console.WriteLine("Edit operation complete.");
-            }
-            else
-            {
-                Console.WriteLine("Invalid User ID.");
-            }
-        }
     }
 }

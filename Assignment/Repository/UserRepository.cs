@@ -35,6 +35,18 @@ namespace Assignment.Repository
             if (user != null)
             {
                 Console.WriteLine($"User ID: {user.UserId}, UserName: {user.UserName}, Email: {user.Email}");
+
+                // Check if user profile exists and display profile details
+                if (user.UserProfile != null)
+                {
+                    var profile = user.UserProfile;
+                    Console.WriteLine($"Profile ID: {profile.Id}, Address: {profile.Address}, Phone: {profile.Phone}");
+                    // Output other profile details as needed
+                }
+                else
+                {
+                    Console.WriteLine("User profile not found.");
+                }
             }
             else
             {

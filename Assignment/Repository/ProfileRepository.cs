@@ -1,4 +1,4 @@
-﻿using Assignment.IRepository; // Assuming this is the namespace where IProfile is defined
+﻿using Assignment.IRepository;
 using Assignment.Models;
 using System.Collections.Generic;
 
@@ -15,6 +15,15 @@ namespace Assignment.Repository
             if (profileIndex != -1)
             {
                 profiles[profileIndex] = updatedProfile;
+            }
+        }
+
+        public void DeleteProfile(int userId)
+        {
+            var profileToRemove = profiles.Find(p => p.UserId == userId);
+            if (profileToRemove != null)
+            {
+                profiles.Remove(profileToRemove);
             }
         }
     }
