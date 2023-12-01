@@ -11,6 +11,6 @@ namespace Assignment.Models
         public int TransactionId { get; set; }
         public int UserID { get; set; }
         public double Transaction_amount { get; set; }
-        public User UserLists { get; set; }
+        public Users UserLists { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace Assignment.IRepository
     public interface ITransaction
     {
         void AddPayment(int userId, Assignment.Models.Transaction payment);
+        void ViewTransaction(int userId);
         // Other method declarations if needed
     }
 }
