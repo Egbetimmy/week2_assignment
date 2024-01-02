@@ -11,7 +11,8 @@ namespace Assignment.Repository
     // User class implementing IUser interface
     public class UserRepository : IUser
     {
-        private List<Users> users;
+        private List<Users> users; 
+        private List<Profile> profiles;
 
         public UserRepository()
         {
@@ -31,21 +32,25 @@ namespace Assignment.Repository
 
         public void ViewUser(int userId)
         {
-            var user = users.Find(u => u.UserId == userId);
+
+
+             var user = users.Find(u => u.UserId == userId);
+
             if (user != null)
             {
                 Console.WriteLine($"User ID: {user.UserId}, UserName: {user.UserName}, Email: {user.Email}");
 
-                // Check if user profile exists and display profile details
-                if (user.UserProfile != null)
+                // Retrieve associated profile for the user
+                var userProfile = profiles.Find(p => p.UserId == user.UserId);
+
+                if (userProfile != null)
                 {
-                    var profile = user.UserProfile;
-                    Console.WriteLine($"Profile ID: {profile.Id}, Address: {profile.Address}, Phone: {profile.Phone}");
-                    // Output other profile details as needed
+                    Console.WriteLine("User Profile Details:");
+                    Console.WriteLine($"Address: {userProfile.Address}, Phone: {userProfile.Phone}, Photo: {userProfile.Photo}, LocalGovt: {userProfile.LocalGovt}");
                 }
                 else
                 {
-                    Console.WriteLine("User profile not found.");
+                    Console.WriteLine("No profile found for this user.");
                 }
             }
             else
@@ -54,7 +59,7 @@ namespace Assignment.Repository
             }
         }
 
-        public void EditUser(int userId)
+            public void EditUser(int userId)
         {
             var user = users.Find(u => u.UserId == userId);
             if (user != null)

@@ -14,7 +14,7 @@ namespace Assignment.Repository
             var profileIndex = profiles.FindIndex(p => p.UserId == userId);
             if (profileIndex != -1)
             {
-                profiles[profileIndex] = updatedProfile;
+                profiles[profileIndex]   = updatedProfile;
             }
         }
 
