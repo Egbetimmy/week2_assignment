@@ -96,13 +96,15 @@ namespace Assignment.User
         {
             bool exitUser = false;
 
+            Users newUser = new Users();
+
             while (!exitUser)
             {
                 Console.WriteLine("User Operations:");
                 Console.WriteLine("Enter 1 to add user");
                 Console.WriteLine("Enter 2 to view user");
-                Console.WriteLine("Enter 3 to edit user");
-                Console.WriteLine("Enter 4 to delete user");
+                Console.WriteLine("Enter 3 to delete user");
+                Console.WriteLine("Enter 4 to edit user");
                 Console.WriteLine("Enter 5 to return to main menu");
 
                 Console.Write("Enter your choice: ");
@@ -111,9 +113,35 @@ namespace Assignment.User
                 switch (userInput)
                 {
                     case "1":
+                        Console.Write("Enter User ID to add: ");
+                        if (int.TryParse(Console.ReadLine(), out int idToAdd))
+                        {
+                            Console.Write("Enter User Name: ");
+                            string userName = Console.ReadLine();
+
+                            Console.Write("Enter Email: ");
+                            string email = Console.ReadLine();
+
+                            // Create a new Users object
+                            newUser = new Users(idToAdd, userName, email);
+
+                            // Add the newly created user using userRepository.AddUser method
+                            userRepository.AddUser(newUser);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid User ID.");
+                        }
+                        break;
+
+
+                    case "2":
                         Console.Write("Enter User ID to view: ");
+
+                        
                         if (int.TryParse(Console.ReadLine(), out int idToView))
                         {
+
                             userRepository.ViewUser(idToView);
                         }
                         else
@@ -122,7 +150,7 @@ namespace Assignment.User
                         }
                         break;
 
-                    case "2":
+                    case "3":
                         Console.Write("Enter User ID to delete: ");
                         if (int.TryParse(Console.ReadLine(), out int idToDelete))
                         {
@@ -134,7 +162,7 @@ namespace Assignment.User
                         }
                         break;
 
-                    case "3":
+                    case "4":
                         Console.Write("Enter User ID to edit: ");
                         if (int.TryParse(Console.ReadLine(), out int idToEdit))
                         {
@@ -165,8 +193,8 @@ namespace Assignment.User
             while (!exitUser)
             {
                 Console.WriteLine("User Operations:");
-                Console.WriteLine("Enter 1 to Update user");
-                Console.WriteLine("Enter 2 to delete user");
+                Console.WriteLine("Enter 1 to Update profile");
+                Console.WriteLine("Enter 2 to delete profile");
                 Console.WriteLine("Enter 3 to return to main menu");
 
                 Console.Write("Enter your choice: ");
@@ -209,7 +237,7 @@ namespace Assignment.User
                             Console.WriteLine("Invalid User ID.");
                         }
                         break;
-
+  
 
                     case "2":
                         Console.Write("Enter User ID to delete: ");
